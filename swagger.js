@@ -12,6 +12,9 @@ const options = {
       {
         url: 'http://localhost:5055',
       },
+      {
+        url: 'http://35.219.118.229',
+      },
     ],
   },
   apis: ['./routes/*.js'],
