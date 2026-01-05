@@ -6,6 +6,7 @@ const Category = require('../models/Category');
 // @access  Private/Admin
 const createCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
+  const image = req.file.path;
 
   const categoryExists = await Category.findOne({ name });
 
@@ -16,6 +17,7 @@ const createCategory = asyncHandler(async (req, res) => {
 
   const category = await Category.create({
     name,
+    image,
   });
 
   if (category) {
@@ -53,11 +55,13 @@ const getCategoryById = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const updateCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
+  const image = req.file ? req.file.path : req.body.image;
 
   const category = await Category.findById(req.params.id);
 
   if (category) {
     category.name = name;
+    category.image = image;
     const updatedCategory = await category.save();
     res.json(updatedCategory);
   } else {

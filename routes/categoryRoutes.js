@@ -8,6 +8,7 @@ const {
   deleteCategory,
 } = require('../controllers/categoryController');
 const { protect } = require('../middleware/authMiddleware');
+const upload = require('../middleware/uploadMiddleware');
 
 /**
  * @swagger
@@ -42,9 +43,15 @@ const { protect } = require('../middleware/authMiddleware');
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Category'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: The category was successfully created
@@ -59,7 +66,7 @@ const { protect } = require('../middleware/authMiddleware');
  *       200:
  *         description: A list of categories
  */
-router.route('/').post(protect, createCategory).get(getCategories);
+router.route('/').post(protect, upload.single('image'), createCategory).get(getCategories);
 
 /**
  * @swagger
@@ -94,9 +101,15 @@ router.route('/').post(protect, createCategory).get(getCategories);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Category'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: The updated category data
@@ -129,7 +142,7 @@ router.route('/').post(protect, createCategory).get(getCategories);
 router
   .route('/:id')
   .get(getCategoryById)
-  .put(protect, updateCategory)
+  .put(protect, upload.single('image'), updateCategory)
   .delete(protect, deleteCategory);
 
 module.exports = router;
