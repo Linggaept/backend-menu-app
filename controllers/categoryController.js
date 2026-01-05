@@ -70,10 +70,9 @@ const updateCategory = asyncHandler(async (req, res) => {
 // @route   DELETE /api/categories/:id
 // @access  Private/Admin
 const deleteCategory = asyncHandler(async (req, res) => {
-  const category = await Category.findById(req.params.id);
+  const category = await Category.findByIdAndDelete(req.params.id);
 
   if (category) {
-    await category.remove();
     res.json({ message: 'Category removed' });
   } else {
     res.status(404);

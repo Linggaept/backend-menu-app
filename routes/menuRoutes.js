@@ -8,6 +8,7 @@ const {
   deleteMenu,
 } = require('../controllers/menuController');
 const { protect } = require('../middleware/authMiddleware');
+const upload = require('../middleware/uploadMiddleware');
 
 /**
  * @swagger
@@ -19,7 +20,6 @@ const { protect } = require('../middleware/authMiddleware');
  *         - category
  *         - name
  *         - description
- *         - image
  *       properties:
  *         category:
  *           type: string
@@ -30,9 +30,6 @@ const { protect } = require('../middleware/authMiddleware');
  *         description:
  *           type: string
  *           description: A description of the menu item
- *         image:
- *           type: string
- *           description: URL of the menu item image
  *         time:
  *           type: number
  *           description: The preparation time in minutes
@@ -59,9 +56,23 @@ const { protect } = require('../middleware/authMiddleware');
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Menu'
+ *             type: object
+ *             properties:
+ *               category:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               time:
+ *                 type: number
+ *               slot:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: The menu item was successfully created
@@ -82,7 +93,7 @@ const { protect } = require('../middleware/authMiddleware');
  *       200:
  *         description: A list of menu items
  */
-router.route('/').post(protect, createMenu).get(getMenus);
+router.route('/').post(protect, upload.single('image'), createMenu).get(getMenus);
 
 /**
  * @swagger
@@ -117,9 +128,23 @@ router.route('/').post(protect, createMenu).get(getMenus);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Menu'
+ *             type: object
+ *             properties:
+ *               category:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               time:
+ *                 type: number
+ *               slot:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: The updated menu item data
@@ -152,7 +177,7 @@ router.route('/').post(protect, createMenu).get(getMenus);
 router
   .route('/:id')
   .get(getMenuById)
-  .put(protect, updateMenu)
+  .put(protect, upload.single('image'), updateMenu)
   .delete(protect, deleteMenu);
 
 module.exports = router;

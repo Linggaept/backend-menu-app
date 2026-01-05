@@ -5,7 +5,8 @@ const Menu = require('../models/Menu');
 // @route   POST /api/menus
 // @access  Private/Admin
 const createMenu = asyncHandler(async (req, res) => {
-  const { category, name, description, image, time, slot } = req.body;
+  const { category, name, description, time, slot } = req.body;
+  const image = req.file.path;
 
   const menu = new Menu({
     category,
@@ -55,7 +56,8 @@ const getMenuById = asyncHandler(async (req, res) => {
 // @route   PUT /api/menus/:id
 // @access  Private/Admin
 const updateMenu = asyncHandler(async (req, res) => {
-  const { category, name, description, image, time, slot } = req.body;
+  const { category, name, description, time, slot } = req.body;
+  const image = req.file ? req.file.path : req.body.image;
 
   const menu = await Menu.findById(req.params.id);
 
@@ -79,10 +81,9 @@ const updateMenu = asyncHandler(async (req, res) => {
 // @route   DELETE /api/menus/:id
 // @access  Private/Admin
 const deleteMenu = asyncHandler(async (req, res) => {
-  const menu = await Menu.findById(req.params.id);
+  const menu = await Menu.findByIdAndDelete(req.params.id);
 
   if (menu) {
-    await menu.remove();
     res.json({ message: 'Menu removed' });
   } else {
     res.status(404);
