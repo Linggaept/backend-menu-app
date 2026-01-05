@@ -91,10 +91,18 @@ const deleteMenu = asyncHandler(async (req, res) => {
   }
 });
 
+const getMenusByCategory = asyncHandler(async (req, res) => {
+  const menus = await Menu.find({ category: req.params.categoryId }).populate(
+    'category'
+  );
+  res.json(menus);
+});
+
 module.exports = {
   createMenu,
   getMenus,
   getMenuById,
   updateMenu,
   deleteMenu,
+  getMenusByCategory,
 };

@@ -6,6 +6,7 @@ const {
   getMenuById,
   updateMenu,
   deleteMenu,
+  getMenusByCategory,
 } = require('../controllers/menuController');
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
@@ -94,6 +95,27 @@ const upload = require('../middleware/uploadMiddleware');
  *         description: A list of menu items
  */
 router.route('/').post(protect, upload.single('image'), createMenu).get(getMenus);
+
+/**
+ * @swagger
+ * /api/menus/category/{categoryId}:
+ *   get:
+ *     summary: Get all menu items by category
+ *     tags: [Menus]
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the category
+ *     responses:
+ *       200:
+ *         description: A list of menu items
+ *       404:
+ *         description: Category not found
+ */
+router.route('/category/:categoryId').get(getMenusByCategory);
 
 /**
  * @swagger
